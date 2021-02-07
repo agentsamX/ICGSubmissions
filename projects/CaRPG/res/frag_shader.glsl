@@ -53,7 +53,7 @@ void main() {
 	vec3 N = normalize(inNormal);
 	vec3 lightDir = normalize(u_LightPos - inPos);
 	
-	float dif = max(dot(N, lightDir), 0.0);
+	float dif =u_RampingDiff==1?texture(rampTex,vec2(max(dot(N, lightDir), 0.0),0.5)).r: max(dot(N, lightDir), 0.0);
 	float diffuseStrength=u_DiffuseStrength;
 	vec3 diffuse = dif * textureColor*diffuseStrength;//inColor;// add diffuse intensity
 
@@ -66,8 +66,8 @@ void main() {
 	float specularStrength = u_SpecularStrength; // this can be a uniform
 	vec3 camDir = normalize(u_CamPos - inPos);
 	vec3 reflectDir = reflect(-lightDir, N);
-	float spec = pow(max(dot(camDir, reflectDir), 0.0), 4); // Shininess coefficient (can be a uniform)
-	vec3 specular = (u_RampingSpec==1?texture(rampTex,vec2(0.5,specularStrength * spec)).r :specularStrength * spec)* lightColor; // Can also use a specular color
+	float spec = u_RampingSpec==1?texture(rampTex,vec2(pow(max(dot(camDir, reflectDir), 0.0), 4),0.5)).r:pow(max(dot(camDir, reflectDir), 0.0), 4); // Shininess coefficient (can be a uniform)
+	vec3 specular = specularStrength * spec* lightColor; // Can also use a specular color
 	
 	vec3 result = (ambient + diffuse + specular);
 	

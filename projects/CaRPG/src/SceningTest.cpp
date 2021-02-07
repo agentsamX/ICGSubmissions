@@ -14,6 +14,8 @@ void SceningTest::Start()
 	int width, height;
 	glfwGetWindowSize(window, &width, &height);
 
+	rampTex = Texture2D::LoadFromFile("tinyRamp.png");
+
 	sceneBuff = m_Registry.create();
 	cocoBuff = m_Registry.create();
 	m_Registry.emplace<PostEffect>(sceneBuff);
@@ -24,7 +26,7 @@ void SceningTest::Start()
 	cubes.push_back(LUT3D("cubes/Neutral-512.cube"));
 	cubes.push_back(LUT3D("cubes/Cool.cube"));
 	cubes.push_back(LUT3D("cubes/Warm.cube"));
-	cubes.push_back(LUT3D("cubes/Custom.cube"));
+	cubes.push_back(LUT3D("cubes/Darken-512.cube"));
 
 
 
@@ -671,8 +673,7 @@ int SceningTest::Update()
 	PostEffect* framebuffer = &m_Registry.get<PostEffect>(sceneBuff);
 	CubeCoCoEffect* colorCorrect = &m_Registry.get<CubeCoCoEffect>(cocoBuff);
 
-	rampTex = Texture2D::Create();
-	rampTex->LoadFromFile("rampTest.png");
+	
 
 	framebuffer->Clear();
 	colorCorrect->Clear();
@@ -1210,7 +1211,9 @@ void SceningTest::ImGUIUpdate()
 			ImGui::Checkbox("Diffuse Lighting", &diffuseOn);
 			ImGui::Checkbox("Specular Lighting", &specularOn);
 			ImGui::Checkbox("Emissive Car Lighting", &carLighting);
-			//ImGui::Checkbox("Specular Ramping", &rampOnSpec);
+			ImGui::Checkbox("Specular Ramping", &rampOnSpec);
+			ImGui::Checkbox("Diffuse Ramping", &rampOnDiff);
+
 
 			if (ImGui::Button("1"))
 			{
@@ -1249,11 +1252,11 @@ void SceningTest::ImGUIUpdate()
 			}
 			if (ImGui::Button("6"))
 			{
-
+				rampOnDiff = !rampOnDiff;
 			}
 			if (ImGui::Button("7"))
 			{
-
+				rampOnSpec = !rampOnSpec;
 			}
 			if (ImGui::Button("8"))
 			{
