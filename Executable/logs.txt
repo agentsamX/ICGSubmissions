@@ -1,1 +1,0 @@
-[2021-02-02 20:17:06.888] [APP] [warning] [DEBUG] Program/shader state performance warning: Vertex shader in program 1 is being recompiled based on GL state.

@@ -34,6 +34,11 @@ void MidtermScene::Start()
 	basicShader->LoadShaderPartFromFile("frag_shader.glsl", GL_FRAGMENT_SHADER);
 	basicShader->Link();
 
+	toonShader = Shader::Create();
+	toonShader->LoadShaderPartFromFile("vertex_shader.glsl", GL_VERTEX_SHADER);
+	toonShader->LoadShaderPartFromFile("toonFrag_shader.glsl", GL_FRAGMENT_SHADER);
+	toonShader->Link();
+
 	glm::vec3 lightPos = glm::vec3(-3.0f, 0.0f, -2.0f);
 	glm::vec3 lightCol = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec3 ambientCol = glm::vec3(1.0f);
@@ -41,6 +46,10 @@ void MidtermScene::Start()
 	basicShader->SetUniform("u_LightPos", lightPos);
 	basicShader->SetUniform("u_LightCol", lightCol);
 	basicShader->SetUniform("u_AmbientCol", ambientCol);
+
+	toonShader->SetUniform("u_LightPos", lightPos);
+	toonShader->SetUniform("u_LightCol", lightCol);
+	toonShader->SetUniform("u_AmbientCol", ambientCol);
 
 	//object setup
 	goldenMonkey = m_Registry.create();
@@ -115,13 +124,22 @@ int MidtermScene::Update()
 
 	framebuffer->BindBuffer(0);
 
-	basicShader->Bind();
-	basicShader->SetUniform("u_CamPos", camera->GetPosition());
-	basicShader->SetUniform("u_SpecularStrength", specularOn ? 1.0f : 0.0f);
-	basicShader->SetUniform("u_AmbientStrength", ambientOn ? 0.6f : 0.0f);
-	basicShader->SetUniform("u_DiffuseStrength", diffuseOn ? 1.0f : 0.0f);
-	basicShader->SetUniform("u_TextureOn", textureOn ? 1 : 0);
-	basicShader->SetUniform("u_toonBands",toonOn? toonBands:0);
+	if (toonOn)
+	{
+		activeShader = toonShader;
+	}
+	else
+	{
+		activeShader = basicShader;
+	}
+
+	activeShader->Bind();
+	activeShader->SetUniform("u_CamPos", camera->GetPosition());
+	activeShader->SetUniform("u_SpecularStrength", specularOn ? 1.0f : 0.0f);
+	activeShader->SetUniform("u_AmbientStrength", ambientOn ? 0.6f : 0.0f);
+	activeShader->SetUniform("u_DiffuseStrength", diffuseOn ? 1.0f : 0.0f);
+	activeShader->SetUniform("u_TextureOn", textureOn ? 1 : 0);
+	activeShader->SetUniform("u_toonBands",toonOn? toonBands:0);
 	
 	glm::vec3 monkRot = m_Registry.get<syre::Transform>(goldenMonkey).GetRotation();
 	glm::vec3 monkPos = m_Registry.get<syre::Transform>(goldenMonkey).GetPosition();
@@ -134,9 +152,9 @@ int MidtermScene::Update()
 	for (auto entity : renderView)
 	{
 		glm::mat4 transform = renderView.get<syre::Transform>(entity).GetModelMat();
-		basicShader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transform);
-		basicShader->SetUniformMatrix("u_Model", transform);
-		basicShader->SetUniformMatrix("u_ModelRotation", glm::mat3(transform));
+		activeShader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transform);
+		activeShader->SetUniformMatrix("u_Model", transform);
+		activeShader->SetUniformMatrix("u_ModelRotation", glm::mat3(transform));
 		renderView.get<syre::Texture>(entity).Bind();
 		renderView.get<syre::Mesh>(entity).Render();
 	}

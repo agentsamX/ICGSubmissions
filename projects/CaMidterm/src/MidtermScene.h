@@ -23,7 +23,9 @@ private:
 	entt::entity sceneBuff;
 	entt::entity combinedBuf;
 
+	Shader::sptr activeShader;
 	Shader::sptr basicShader;
+	Shader::sptr toonShader;
 	Shader::sptr morphShader;
 
 	entt::entity goldenMonkey;
@@ -31,7 +33,7 @@ private:
 	bool ambientOn = true;
 	bool specularOn = true;
 	bool diffuseOn = true;
-	bool bloomOn = true;
+	bool bloomOn = false;
 	bool textureOn = true;
 	bool toonOn = false;
 
