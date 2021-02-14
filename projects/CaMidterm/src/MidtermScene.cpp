@@ -53,6 +53,16 @@ void MidtermScene::Start()
 	m_Registry.emplace<syre::Texture>(pedestal, "stone-1024.png");
 	m_Registry.emplace<syre::Transform>(pedestal, glm::vec3(0.0f,0.0f,-3.5f),glm::vec3(90.0f,0.f,0.0f),glm::vec3(0.4f));
 
+	entt::entity pedestal1 = m_Registry.create();
+	m_Registry.emplace<syre::Mesh>(pedestal1, "pedestal.obj");
+	m_Registry.emplace<syre::Texture>(pedestal1, "stone-1024.png");
+	m_Registry.emplace<syre::Transform>(pedestal1, glm::vec3(0.0f, -4.0f, -3.3f), glm::vec3(175.0f, 0.f, 0.0f), glm::vec3(0.4f));
+
+	entt::entity pedestal2 = m_Registry.create();
+	m_Registry.emplace<syre::Mesh>(pedestal2, "pedestal.obj");
+	m_Registry.emplace<syre::Texture>(pedestal2, "stone-1024.png");
+	m_Registry.emplace<syre::Transform>(pedestal2, glm::vec3(0.0f, 4.0f, -3.3f), glm::vec3(5.0f, 0.f, 0.0f), glm::vec3(0.4f));
+
 	entt::entity circle = m_Registry.create();
 	m_Registry.emplace<syre::Mesh>(circle, "circlePlane.obj");
 	m_Registry.emplace<syre::Texture>(circle, "dirtDark.png");
@@ -78,6 +88,16 @@ void MidtermScene::Start()
 	m_Registry.emplace<syre::Texture>(neonLight4, "superBrightGreen.png");
 	m_Registry.emplace<syre::Transform>(neonLight4, glm::vec3(-2.0f, 0.0f, -3.9f), glm::vec3(90.0f, 0.f, 90.0f), glm::vec3(0.1f));
 
+	entt::entity neonLight5 = m_Registry.create();
+	m_Registry.emplace<syre::Mesh>(neonLight5, "neonLightReceptacle.obj");
+	m_Registry.emplace<syre::Texture>(neonLight5, "superBrightRed.png");
+	m_Registry.emplace<syre::Transform>(neonLight5, glm::vec3(-2.0f, -4.0f, -3.9f), glm::vec3(90.0f, 0.f, 90.0f), glm::vec3(0.1f));
+
+	entt::entity neonLight6 = m_Registry.create();
+	m_Registry.emplace<syre::Mesh>(neonLight6, "neonLightReceptacle.obj");
+	m_Registry.emplace<syre::Texture>(neonLight6, "superBrightRed.png");
+	m_Registry.emplace<syre::Transform>(neonLight6, glm::vec3(-2.0f, 4.0f, -3.9f), glm::vec3(90.0f, 0.f, 90.0f), glm::vec3(0.1f));
+
 	lastFrame = glfwGetTime();
 
 }
@@ -101,11 +121,14 @@ int MidtermScene::Update()
 	basicShader->SetUniform("u_AmbientStrength", ambientOn ? 0.6f : 0.0f);
 	basicShader->SetUniform("u_DiffuseStrength", diffuseOn ? 1.0f : 0.0f);
 	basicShader->SetUniform("u_TextureOn", textureOn ? 1 : 0);
+	basicShader->SetUniform("u_toonBands",toonOn? toonBands:0);
 	
 	glm::vec3 monkRot = m_Registry.get<syre::Transform>(goldenMonkey).GetRotation();
+	glm::vec3 monkPos = m_Registry.get<syre::Transform>(goldenMonkey).GetPosition();
+
 
 	m_Registry.get<syre::Transform>(goldenMonkey).SetRotation(glm::vec3(monkRot.x, monkRot.y, monkRot.z + deltaTime*100));
-
+	m_Registry.get<syre::Transform>(goldenMonkey).SetPosition(glm::vec3(monkPos.x, monkPos.y, 0.5f+sin(glfwGetTime())/3));
 
 	auto renderView = m_Registry.view<syre::Mesh, syre::Transform, syre::Texture>();
 	for (auto entity : renderView)
@@ -152,16 +175,24 @@ void MidtermScene::ImGUIUpdate()
 
 	if (ImGui::Begin("Debug")) {
 		// Render our GUI stuff
-		
+
 		glm::vec3 camPos = camera->GetPosition();
 
 		ImGui::SliderFloat3("Camera Position", &camPos.x, -20.f, 20.f);
-		ImGui::SliderFloat("Bright threshold", &brightHold, 0.0, 1.0);
-		ImGui::SliderInt("Blur Passes", &passes, 0, 100);
 		ImGui::Checkbox("Ambient Lighting", &ambientOn);
 		ImGui::Checkbox("Diffuse Lighting", &diffuseOn);
 		ImGui::Checkbox("Specular Lighting", &specularOn);
 		ImGui::Checkbox("Bloom Effect", &bloomOn);
+		if (bloomOn)
+		{
+			ImGui::SliderFloat("Bright threshold", &brightHold, 0.0, 1.0);
+			ImGui::SliderInt("Blur Passes", &passes, 0, 100);
+		}
+		ImGui::Checkbox("Toon shading", &toonOn);
+		if (toonOn)
+		{
+			ImGui::SliderInt("Toon bands", &toonBands, 1, 20);
+		}
 
 		bloom->SetThreshold(brightHold);
 		bloom->SetPasses(passes);

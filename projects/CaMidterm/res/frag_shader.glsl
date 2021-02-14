@@ -20,6 +20,8 @@ uniform int u_TextureOn = 1;
 uniform int u_RampingSpec;
 uniform int u_RampingDiff;
 
+uniform int u_toonBands = 0;
+
 
 uniform vec3  u_LightPos;
 uniform vec3  u_LightCol;
@@ -60,7 +62,7 @@ void main() {
 	float spec = u_RampingSpec==1?texture(rampTex,vec2(pow(max(dot(camDir, reflectDir), 0.0), 4),0.5)).r:pow(max(dot(camDir, reflectDir), 0.0), 4); // Shininess coefficient (can be a uniform)
 	vec3 specular = specularStrength * spec* lightColor; // Can also use a specular color
 	
-	vec3 result = (ambient + diffuse + specular);
+	vec3 result = (u_toonBands==0)? (ambient + diffuse + specular):round((ambient+diffuse+specular)*u_toonBands)/u_toonBands;
 	
 	frag_color = vec4(textureColor,1.0)*vec4(result,1.0);
 }

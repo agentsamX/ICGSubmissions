@@ -33,6 +33,7 @@ private:
 	bool diffuseOn = true;
 	bool bloomOn = true;
 	bool textureOn = true;
+	bool toonOn = false;
 
-	int activeCube = 0;
+	int toonBands = 5;
 };
