@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{1653CE33-0220-293F-2B39-17E717655ECD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Post">
+      <UniqueIdentifier>{4BF68B97-B7B6-07CE-80F1-504BEC704CAA}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\AudioEngine.h" />
+    <ClInclude Include="src\Cars.h" />
+    <ClInclude Include="src\Graphics\Framebuffer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\LUT.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Post\Blur.h">
+      <Filter>Graphics\Post</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Post\CombinedBloom.h">
+      <Filter>Graphics\Post</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Post\CubeCoCoEffect.h">
+      <Filter>Graphics\Post</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Post\GreyscaleEffect.h">
+      <Filter>Graphics\Post</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Post\PostEffect.h">
+      <Filter>Graphics\Post</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Post\SepiaEffect.h">
+      <Filter>Graphics\Post</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Logging.h" />
+    <ClInclude Include="src\MenuScreen.h" />
+    <ClInclude Include="src\MidGameMenu.h" />
+    <ClInclude Include="src\Obstacles.h" />
+    <ClInclude Include="src\Scene2.h" />
+    <ClInclude Include="src\SceningTest.h" />
+    <ClInclude Include="src\TutorialScene.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\AudioEngine.cpp" />
+    <ClCompile Include="src\Cars.cpp" />
+    <ClCompile Include="src\Graphics\Framebuffer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\LUT.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Post\Blur.cpp">
+      <Filter>Graphics\Post</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Post\CombinedBloom.cpp">
+      <Filter>Graphics\Post</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Post\CubeCoCoEffect.cpp">
+      <Filter>Graphics\Post</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Post\GreyscaleEffect.cpp">
+      <Filter>Graphics\Post</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Post\PostEffect.cpp">
+      <Filter>Graphics\Post</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Post\SepiaEffect.cpp">
+      <Filter>Graphics\Post</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuScreen.cpp" />
+    <ClCompile Include="src\MidGameMenu.cpp" />
+    <ClCompile Include="src\Obstacles.cpp" />
+    <ClCompile Include="src\Scene2.cpp" />
+    <ClCompile Include="src\SceningTest.cpp" />
+    <ClCompile Include="src\TutorialScene.cpp" />
+    <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+</Project>
