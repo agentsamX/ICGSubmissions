@@ -91,6 +91,18 @@ void GBuffer::DrawBuffersToScreen()
 	_passThrough->UnBind();
 }
 
+void GBuffer::DrawBuffersToScreen(int targ)
+{
+	_passThrough->Bind();
+
+	glViewport(0, 0, _windowWidth, _windowHeight);
+	_gBuffer.BindColorAsTexture(targ, 0);
+	_gBuffer.DrawFullscreenQuad();
+	_gBuffer.UnbindTexture(0);
+
+	_passThrough->UnBind();
+}
+
 void GBuffer::Reshape(unsigned width, unsigned height)
 {
 	_windowHeight = height;

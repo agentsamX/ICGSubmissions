@@ -4,6 +4,11 @@
 #include "Graphics/Post/CubeCoCoEffect.h"
 #include "Graphics/Post/CombinedBloom.h"
 #include "Graphics/Post/Blur.h"
+#include "Graphics/Post/Pixelate.h"
+#include "Graphics/Post/FilmGrain.h"
+#include "Graphics/Post/NightVision.h"
+
+
 #include "Graphics/LUT.h"
 #include "Graphics/GBuffer.h"
 #include "Graphics/IlluminationBuffer.h"
@@ -65,9 +70,17 @@ private:
 	bool blurring = false;
 	entt::entity gBuff;
 	bool dispG = false;
+	bool indivgBuff = false;
+	int colTarg = 0;
 	entt::entity illumBuff;
 	bool dispIllum = false;
 	entt::entity shadowBuff;
+	entt::entity pixelBuff;
+	bool pixelling = false;
+	entt::entity grainBuff;
+	bool graining = false;
+	entt::entity nightVisBuff;
+	bool nightVising = false;
 
 	std::vector<LUT3D> cubes;
 

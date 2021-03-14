@@ -23,6 +23,9 @@ void SceningTest::Start()
 	gBuff = m_Registry.create();
 	illumBuff = m_Registry.create();
 	shadowBuff = m_Registry.create();
+	pixelBuff = m_Registry.create();
+	nightVisBuff = m_Registry.create();
+	grainBuff = m_Registry.create();
 
 	m_Registry.emplace<PostEffect>(sceneBuff);
 	m_Registry.emplace<CubeCoCoEffect>(cocoBuff);
@@ -31,6 +34,9 @@ void SceningTest::Start()
 	m_Registry.emplace<GBuffer>(gBuff);
 	m_Registry.emplace<IlluminationBuffer>(illumBuff);
 	m_Registry.emplace<Framebuffer>(shadowBuff);
+	m_Registry.emplace<Pixelate>(pixelBuff);
+	m_Registry.emplace<NightVision>(nightVisBuff);
+	m_Registry.emplace<FilmGrain>(grainBuff);
 
 	m_Registry.get<PostEffect>(sceneBuff).Init(width, height);
 	m_Registry.get<CubeCoCoEffect>(cocoBuff).Init(width, height);
@@ -39,12 +45,15 @@ void SceningTest::Start()
 	m_Registry.get<GBuffer>(gBuff).Init(width, height);
 	m_Registry.get<IlluminationBuffer>(illumBuff).Init(width, height);
 	m_Registry.get<Framebuffer>(shadowBuff).Init(width, height);
+	m_Registry.get<Pixelate>(pixelBuff).Init(width, height);
+	m_Registry.get<NightVision>(nightVisBuff).Init(width, height);
+	m_Registry.get<FilmGrain>(grainBuff).Init(width, height);
 
-	Sun._ambientPow = 0.7;
+	Sun._ambientPow = 0.2;
 	Sun._ambientCol = glm::vec4(1.0, 1.0, 1.0,1.0);
-	Sun._lightAmbientPow = 0.5;
-	Sun._lightCol=glm::vec4(0.6, 0.6, 1.0,1.0);
-	Sun._lightDirection = glm::vec4(0.0,1.0,1.0,0.0);
+	Sun._lightAmbientPow = 0.2;
+	Sun._lightCol=glm::vec4(1.0, 1.0, 1.0,1.0);
+	Sun._lightDirection = glm::vec4(-0.170,1.6,-2.530,0.0);
 	Sun._lightSpecularPow = 0.7;
 	Sun._shadowBias = 0.05;
 	
@@ -815,6 +824,9 @@ int SceningTest::Update()
 	GBuffer* g = &m_Registry.get<GBuffer>(gBuff);
 	IlluminationBuffer* illum = &m_Registry.get<IlluminationBuffer>(illumBuff);
 	Framebuffer* shadow = &m_Registry.get<Framebuffer>(shadowBuff);
+	Pixelate* pixel = &m_Registry.get<Pixelate>(pixelBuff);
+	NightVision* vision = &m_Registry.get<NightVision>(nightVisBuff);
+	FilmGrain* grain = &m_Registry.get<FilmGrain>(grainBuff);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -826,6 +838,9 @@ int SceningTest::Update()
 	blur->Clear();
 	g->Clear();
 	illum->Clear();
+	pixel->Clear();
+	vision->Clear();
+	grain->Clear();;
 
 	AudioEngine& engine = AudioEngine::Instance();
 
@@ -1336,7 +1351,10 @@ int SceningTest::Update()
 
 	if (dispG)
 	{
-		g->DrawBuffersToScreen();
+		if (indivgBuff)
+			g->DrawBuffersToScreen(colTarg);
+		else
+			g->DrawBuffersToScreen();
 	}
 	else if (dispIllum)
 	{
@@ -1345,6 +1363,12 @@ int SceningTest::Update()
 	else
 	{
 		PostEffect* lastBuffer = illum;
+		if (nightVising)
+		{
+			vision->ApplyEffect(lastBuffer);
+
+			lastBuffer = vision;
+		}
 		if (blooming)
 		{
 			bloom->ApplyEffect(lastBuffer);
@@ -1357,7 +1381,6 @@ int SceningTest::Update()
 
 			lastBuffer = blur;
 		}
-
 		if (correcting)
 		{
 			cubes[activeCube].bind(30);
@@ -1366,6 +1389,19 @@ int SceningTest::Update()
 
 			lastBuffer = colorCorrect;
 		}
+		if (pixelling)
+		{
+			pixel->ApplyEffect(lastBuffer);
+
+			lastBuffer = pixel;
+		}
+		if (graining)
+		{
+			grain->ApplyEffect(lastBuffer);
+
+			lastBuffer = grain;
+		}
+		
 
 		lastBuffer->DrawToScreen();
 	}
@@ -1482,9 +1518,11 @@ void SceningTest::ImGUIUpdate()
 		CombinedBloom* bloom = &m_Registry.get<CombinedBloom>(bloomBuff);
 		Blur* blur = &m_Registry.get<Blur>(blurBuff);
 		IlluminationBuffer* illum = &m_Registry.get<IlluminationBuffer>(illumBuff);
+		Pixelate* pixel = &m_Registry.get<Pixelate>(pixelBuff);
 		int blurPasses = blur->GetPasses();
 		float bloomThreshold = bloom->GetThreshold();
 		int bloomPasses = bloom->GetPasses();
+		int pixellationFactor = pixel->GetFactor();
 
 		// ImGui context new frame
 		ImGui::NewFrame();
@@ -1499,10 +1537,19 @@ void SceningTest::ImGUIUpdate()
 			{
 				ImGui::DragFloat3("Light Direction/Position", glm::value_ptr(illum->GetSunRef()._lightDirection), 0.01f, -10.0f, 10.0f);
 				ImGui::Checkbox("Display GBuffer", &dispG);
+				if (dispG)
+				{
+					ImGui::Checkbox("Display Targets Individually", &indivgBuff);
+					if (indivgBuff)
+					{
+						ImGui::SliderInt("Color Target", &colTarg, 0, 3);
+					}
+				}
 				ImGui::Checkbox("Display Illumination Accumulation", &dispIllum);
 			}
 			if (ImGui::CollapsingHeader("Post Processing"))
 			{
+				ImGui::Checkbox("Night Vision", &nightVising);
 				ImGui::Checkbox("Bloom", &blooming);
 				if (blooming)
 				{
@@ -1523,6 +1570,13 @@ void SceningTest::ImGUIUpdate()
 					ImGui::SliderInt("Active CoCo Effect", &activeCube, 0, cubes.size() - 1);
 					ImGui::Text("0 is Neutral, 1 is Cool, 2 is Warm, 3 is Custom");
 				}
+				ImGui::Checkbox("Pixelation", &pixelling);
+				if (pixelling)
+				{
+					ImGui::SliderInt("Pixellation Amount", &pixellationFactor, 2, 32);
+					pixel->SetFactor(pixellationFactor);
+				}
+				//ImGui::Checkbox("Film Grain", &graining);
 			}
 			if (ImGui::CollapsingHeader("Lighting"))
 			{
@@ -1549,7 +1603,34 @@ void SceningTest::ImGUIUpdate()
 				ImGui::SliderFloat3("Camera Position", &camPos.x,-200.f, 200.f);
 			}
 			camera->SetPosition(camPos);
-			
+			if (ImGui::Button("1"))
+			{
+				dispG = false;
+				dispIllum = false;
+			}
+			if (ImGui::Button("2"))
+			{
+				dispG = true;
+				indivgBuff = true;
+				colTarg = 3;
+			}
+			if (ImGui::Button("3"))
+			{
+				dispG = true;
+				indivgBuff = true;
+				colTarg = 1;
+			}
+			if (ImGui::Button("4"))
+			{
+				dispG = true;
+				indivgBuff = true;
+				colTarg = 0;
+			}
+			if (ImGui::Button("5"))
+			{
+				dispG = false;
+				dispIllum = true;
+			}
 		}
 		ImGui::End();
 		audio.SetGlobalParameter("IsPaused",pauseStatus);

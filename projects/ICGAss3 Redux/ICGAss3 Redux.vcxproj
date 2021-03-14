@@ -119,7 +119,10 @@
     <ClInclude Include="src\Graphics\Post\CombinedBloom.h" />
     <ClInclude Include="src\Graphics\Post\CubeCoCoEffect.h" />
     <ClInclude Include="src\Graphics\Post\DeferredLighting.h" />
+    <ClInclude Include="src\Graphics\Post\FilmGrain.h" />
     <ClInclude Include="src\Graphics\Post\GreyscaleEffect.h" />
+    <ClInclude Include="src\Graphics\Post\NightVision.h" />
+    <ClInclude Include="src\Graphics\Post\Pixelate.h" />
     <ClInclude Include="src\Graphics\Post\PostEffect.h" />
     <ClInclude Include="src\Graphics\Post\SepiaEffect.h" />
     <ClInclude Include="src\Logging.h" />
@@ -131,6 +134,7 @@
     <ClInclude Include="src\TutorialScene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Graphics\Post\FilmGrain.cpp" />
     <ClCompile Include="src\AudioEngine.cpp" />
     <ClCompile Include="src\Cars.cpp" />
     <ClCompile Include="src\Graphics\Framebuffer.cpp" />
@@ -142,6 +146,8 @@
     <ClCompile Include="src\Graphics\Post\CubeCoCoEffect.cpp" />
     <ClCompile Include="src\Graphics\Post\DeferredLighting.cpp" />
     <ClCompile Include="src\Graphics\Post\GreyscaleEffect.cpp" />
+    <ClCompile Include="src\Graphics\Post\NightVision.cpp" />
+    <ClCompile Include="src\Graphics\Post\Pixelate.cpp" />
     <ClCompile Include="src\Graphics\Post\PostEffect.cpp" />
     <ClCompile Include="src\Graphics\Post\SepiaEffect.cpp" />
     <ClCompile Include="src\MenuScreen.cpp" />

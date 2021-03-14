@@ -49,6 +49,9 @@
     <ClInclude Include="src\SceningTest.h" />
     <ClInclude Include="src\TutorialScene.h" />
     <ClInclude Include="src\Graphics\Post\DeferredLighting.h" />
+    <ClInclude Include="src\Graphics\Post\FilmGrain.h" />
+    <ClInclude Include="src\Graphics\Post\Pixelate.h" />
+    <ClInclude Include="src\Graphics\Post\NightVision.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />
@@ -91,5 +94,8 @@
     <ClCompile Include="src\TutorialScene.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Graphics\Post\DeferredLighting.cpp" />
+    <ClCompile Include="src\Graphics\Post\FilmGrain.cpp" />
+    <ClCompile Include="src\Graphics\Post\Pixelate.cpp" />
+    <ClCompile Include="src\Graphics\Post\NightVision.cpp" />
   </ItemGroup>
 </Project>
