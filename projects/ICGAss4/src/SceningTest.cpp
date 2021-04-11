@@ -1923,26 +1923,38 @@ void SceningTest::ImGUIUpdate()
 			}
 			if (ImGui::Button("2"))
 			{
-				dispG = true;
-				indivgBuff = true;
-				colTarg = 3;
+				showVolumes = !showVolumes;
 			}
 			if (ImGui::Button("3"))
 			{
 				dispG = true;
 				indivgBuff = true;
-				colTarg = 1;
+				colTarg = 3;
 			}
 			if (ImGui::Button("4"))
 			{
 				dispG = true;
 				indivgBuff = true;
-				colTarg = 0;
+				colTarg = 1;
 			}
 			if (ImGui::Button("5"))
 			{
+				dispG = true;
+				indivgBuff = true;
+				colTarg = 0;
+			}
+			if (ImGui::Button("6"))
+			{
 				dispG = false;
 				dispIllum = true;
+			}
+			if (ImGui::Button("7"))
+			{
+				tempModel++;
+				if (tempModel > 2)
+				{
+					tempModel = 0;
+				}
 			}
 		}
 		ImGui::End();

@@ -70,4 +70,5 @@ private:
 	syre::Mesh lightVolMesh = syre::Mesh("objects/icoSphere.obj");
 	std::vector<syre::Mesh> vols = { syre::Mesh("objects/icoSphere.obj"),syre::Mesh("objects/cube.obj"),syre::Mesh("objects/cone.obj") };
 
+	int curBuff = 0;
 };

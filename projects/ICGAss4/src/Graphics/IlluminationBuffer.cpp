@@ -13,10 +13,15 @@ void IlluminationBuffer::Init(unsigned width, unsigned height)
 
 	index = int(_buffers.size());
 	_buffers.push_back(new Framebuffer());
-	_buffers[index]->AddColorTarget(GL_RGBA8);
+	_buffers[index]->AddColorTarget(GL_RGBA32F);
 	_buffers[index]->AddDepthTarget();
 	_buffers[index]->Init(width, height);
 
+	index = int(_buffers.size());
+	_buffers.push_back(new Framebuffer());
+	_buffers[index]->AddColorTarget(GL_RGBA32F);
+	_buffers[index]->AddDepthTarget();
+	_buffers[index]->Init(width, height);
 	
 	//loads directional g buffer shader
 	index = int(_shaders.size());
@@ -41,7 +46,7 @@ void IlluminationBuffer::Init(unsigned width, unsigned height)
 	index = int(_shaders.size());
 	_shaders.push_back(Shader::Create());
 	_shaders[index]->LoadShaderPartFromFile("shaders/passthrough_vert.glsl", GL_VERTEX_SHADER);
-	_shaders[index]->LoadShaderPartFromFile("shaders/addem_frag.glsl", GL_FRAGMENT_SHADER);
+	_shaders[index]->LoadShaderPartFromFile("shaders/passthrough_frag.glsl", GL_FRAGMENT_SHADER);
 	_shaders[index]->Link();
 
 	//allocate sun buffer
@@ -78,16 +83,26 @@ void IlluminationBuffer::ApplyEffect(GBuffer* gBuffer)
 		_shaders[Lights::DIRECTIONAL]->UnBind();
 	}
 
-	_shaders[Lights::VOLUME]->Bind();
-	_shaders[Lights::VOLUME]->SetUniformMatrix("u_LightSpaceMatrix", _lightSpaceViewProj);
-	_shaders[Lights::VOLUME]->SetUniform("u_CamPos", glm::vec4(_camPos, 1.0f));
-	gBuffer->BindLighting();
+	
+
+	_shaders[3]->Bind();
+	_buffers[0]->Bind();
+	_buffers[1]->BindColorAsTexture(0, 0);
+	_buffers[0]->RenderToFSQ();
+	_buffers[0]->Unbind();
+	_shaders[3]->UnBind();
 
 	glDisable(GL_DEPTH_TEST);
-	_buffers[1]->Bind();
-	_buffers[1]->BindColorAsTexture(0, 4);
+	
 	for (int i = 0; i < lightVols.size(); i++)
 	{
+		gBuffer->BindLighting();
+
+		_shaders[Lights::VOLUME]->Bind();
+		_shaders[Lights::VOLUME]->SetUniformMatrix("u_LightSpaceMatrix", _lightSpaceViewProj);
+		_shaders[Lights::VOLUME]->SetUniform("u_CamPos", glm::vec4(_camPos, 1.0f));
+		_buffers[1]->Bind();
+		_buffers[0]->BindColorAsTexture(0, 4);
 		glm::mat4 transform = glm::mat4(glm::translate(glm::mat4(1.0f), glm::vec3(lightVols[i]->_Position)) * glm::scale(glm::mat4(1.0f), glm::vec3(lightVols[i]->_Radius)));
 		_shaders[Lights::VOLUME]->SetUniformMatrix("u_ModelViewProjection", _camViewProj * transform);
 		_shaders[Lights::VOLUME]->SetUniformMatrix("u_Model", transform);
@@ -99,13 +114,23 @@ void IlluminationBuffer::ApplyEffect(GBuffer* gBuffer)
 		
 
 		vols[lightVols[i]->_Model].Render();
+		_buffers[1]->Unbind();
+		_shaders[Lights::VOLUME]->UnBind();
+		gBuffer->UnbindLighting();
+
+
+		_shaders[3]->Bind();
+		_buffers[0]->Bind();
+		_buffers[1]->BindColorAsTexture(0, 0);
+		_buffers[0]->RenderToFSQ();
+		_buffers[0]->Unbind();
+		_shaders[3]->UnBind();
 	}
 	printf("oy we got %i volumes 'ere\n", lightVols.size());
-	gBuffer->UnbindLighting();
-	_shaders[Lights::VOLUME]->UnBind();
-	_buffers[1]->Unbind();
 	glEnable(GL_DEPTH_TEST);
-
+	
+	_buffers[0]->Clear();
+	curBuff = 0;
 	//bind ambient
 	_shaders[Lights::AMBIENT]->Bind();
 	_shaders[Lights::AMBIENT]->SetUniform("u_PlayerPos", _playPos);
