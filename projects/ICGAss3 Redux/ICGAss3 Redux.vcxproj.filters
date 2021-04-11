@@ -32,7 +32,19 @@
     <ClInclude Include="src\Graphics\Post\CubeCoCoEffect.h">
       <Filter>Graphics\Post</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\Post\DeferredLighting.h">
+      <Filter>Graphics\Post</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Post\FilmGrain.h">
+      <Filter>Graphics\Post</Filter>
+    </ClInclude>
     <ClInclude Include="src\Graphics\Post\GreyscaleEffect.h">
+      <Filter>Graphics\Post</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Post\NightVision.h">
+      <Filter>Graphics\Post</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Post\Pixelate.h">
       <Filter>Graphics\Post</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Post\PostEffect.h">
@@ -48,10 +60,6 @@
     <ClInclude Include="src\Scene2.h" />
     <ClInclude Include="src\SceningTest.h" />
     <ClInclude Include="src\TutorialScene.h" />
-    <ClInclude Include="src\Graphics\Post\DeferredLighting.h" />
-    <ClInclude Include="src\Graphics\Post\FilmGrain.h" />
-    <ClInclude Include="src\Graphics\Post\Pixelate.h" />
-    <ClInclude Include="src\Graphics\Post\NightVision.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />
@@ -77,7 +85,19 @@
     <ClCompile Include="src\Graphics\Post\CubeCoCoEffect.cpp">
       <Filter>Graphics\Post</Filter>
     </ClCompile>
+    <ClCompile Include="src\Graphics\Post\DeferredLighting.cpp">
+      <Filter>Graphics\Post</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Post\FilmGrain.cpp">
+      <Filter>Graphics\Post</Filter>
+    </ClCompile>
     <ClCompile Include="src\Graphics\Post\GreyscaleEffect.cpp">
+      <Filter>Graphics\Post</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Post\NightVision.cpp">
+      <Filter>Graphics\Post</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Post\Pixelate.cpp">
       <Filter>Graphics\Post</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\Post\PostEffect.cpp">
@@ -93,9 +113,5 @@
     <ClCompile Include="src\SceningTest.cpp" />
     <ClCompile Include="src\TutorialScene.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Graphics\Post\DeferredLighting.cpp" />
-    <ClCompile Include="src\Graphics\Post\FilmGrain.cpp" />
-    <ClCompile Include="src\Graphics\Post\Pixelate.cpp" />
-    <ClCompile Include="src\Graphics\Post\NightVision.cpp" />
   </ItemGroup>
 </Project>

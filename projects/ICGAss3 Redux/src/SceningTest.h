@@ -109,4 +109,7 @@ private:
 	DirectionalLight Sun;
 
 	int activeCube = 3;
+
+	int shadowWidth = 4096;
+	int shadowHeight = 4096;
 };

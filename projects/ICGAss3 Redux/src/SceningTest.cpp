@@ -44,7 +44,8 @@ void SceningTest::Start()
 	m_Registry.get<Blur>(blurBuff).Init(width, height);
 	m_Registry.get<GBuffer>(gBuff).Init(width, height);
 	m_Registry.get<IlluminationBuffer>(illumBuff).Init(width, height);
-	m_Registry.get<Framebuffer>(shadowBuff).Init(width, height);
+	m_Registry.get<Framebuffer>(shadowBuff).AddDepthTarget();
+	m_Registry.get<Framebuffer>(shadowBuff).Init(shadowWidth, shadowHeight);
 	m_Registry.get<Pixelate>(pixelBuff).Init(width, height);
 	m_Registry.get<NightVision>(nightVisBuff).Init(width, height);
 	m_Registry.get<FilmGrain>(grainBuff).Init(width, height);
@@ -837,6 +838,7 @@ int SceningTest::Update()
 	bloom->Clear();
 	blur->Clear();
 	g->Clear();
+	shadow->Clear();
 	illum->Clear();
 	pixel->Clear();
 	vision->Clear();
@@ -1252,6 +1254,7 @@ int SceningTest::Update()
 	illum->SetLightSpaceViewProj(lightSpaceViewProj);
 	illum->SetCamPos(camera->GetPosition());
 
+	glViewport(0, 0, shadowWidth, shadowHeight);
 	simpleDepthShader->Bind();
 	shadow->Bind();
 	for (auto entity : renderView)

@@ -78,7 +78,7 @@ bool Shader::LoadShaderPartFromFile(const char* path, GLenum type) {
 bool Shader::Link()
 {
 	LOG_ASSERT(_vs != 0 && _fs != 0, "Must attach both a vertex and fragment shader!");
-
+	
 	// Attach our two shaders
 	glAttachShader(_handle, _vs);
 	glAttachShader(_handle, _fs);
